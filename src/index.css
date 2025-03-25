@@ -1,0 +1,307 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Grid Layout Styles */
+.react-grid-layout {
+  position: relative;
+  transition: height 200ms ease;
+}
+
+.react-grid-item {
+  transition: all 200ms ease;
+  transition-property: left, top, width, height;
+  background: #1f2937;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.react-grid-item.cssTransforms {
+  transition-property: transform;
+}
+
+.react-grid-item.resizing {
+  z-index: 1;
+  will-change: width, height;
+}
+
+.react-grid-item.react-draggable-dragging {
+  transition: none;
+  z-index: 3;
+  will-change: transform;
+  cursor: move;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.react-grid-item.react-grid-placeholder {
+  background: rgba(59, 130, 246, 0.2);
+  border: 2px dashed #3b82f6;
+  border-radius: 0.5rem;
+  transition-duration: 100ms;
+  z-index: 2;
+  user-select: none;
+  box-shadow: inset 0 0 60px rgba(59, 130, 246, 0.1);
+}
+
+.react-grid-item > .react-resizable-handle {
+  position: absolute;
+  background: none;
+  opacity: 0;
+  transition: opacity 200ms ease;
+  width: 15px;
+  height: 15px;
+  z-index: 10;
+}
+
+.react-grid-item:hover > .react-resizable-handle {
+  opacity: 1;
+}
+
+/* Corner resize handles */
+.react-resizable-handle.react-resizable-handle-se,
+.react-resizable-handle.react-resizable-handle-sw,
+.react-resizable-handle.react-resizable-handle-ne,
+.react-resizable-handle.react-resizable-handle-nw {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+}
+
+/* Edge resize handles */
+.react-resizable-handle.react-resizable-handle-n,
+.react-resizable-handle.react-resizable-handle-s {
+  left: 50%;
+  transform: translateX(-50%);
+  width: 30px;
+  height: 8px;
+  cursor: ns-resize;
+}
+
+.react-resizable-handle.react-resizable-handle-e,
+.react-resizable-handle.react-resizable-handle-w {
+  top: 50%;
+  transform: translateY(-50%);
+  width: 8px;
+  height: 30px;
+  cursor: ew-resize;
+}
+
+/* Position the handles */
+.react-resizable-handle.react-resizable-handle-n { top: 0; }
+.react-resizable-handle.react-resizable-handle-s { bottom: 0; }
+.react-resizable-handle.react-resizable-handle-e { right: 0; }
+.react-resizable-handle.react-resizable-handle-w { left: 0; }
+
+/* Corner positions and cursors */
+.react-resizable-handle.react-resizable-handle-se {
+  bottom: 0;
+  right: 0;
+  cursor: se-resize;
+}
+
+.react-resizable-handle.react-resizable-handle-sw {
+  bottom: 0;
+  left: 0;
+  cursor: sw-resize;
+}
+
+.react-resizable-handle.react-resizable-handle-ne {
+  top: 0;
+  right: 0;
+  cursor: ne-resize;
+}
+
+.react-resizable-handle.react-resizable-handle-nw {
+  top: 0;
+  left: 0;
+  cursor: nw-resize;
+}
+
+/* Visual indicator for resize handles */
+.react-resizable-handle::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: inherit;
+  transition: background-color 200ms ease;
+}
+
+.react-resizable-handle:hover::after {
+  background: rgba(59, 130, 246, 0.4);
+}
+
+/* Widget Styles */
+.widget {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: #1f2937;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform, width, height;
+}
+
+.widget-header {
+  padding: 1rem;
+  background: #374151;
+  border-bottom: 1px solid #4b5563;
+  cursor: move;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  transition: background-color 200ms ease;
+}
+
+.widget-header:hover {
+  background: #404a5e;
+}
+
+.widget-content {
+  flex: 1;
+  overflow: auto;
+  padding: 1rem;
+  position: relative;
+}
+
+/* Scanner Table Styles */
+.scanner-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.scanner-table th {
+  position: sticky;
+  top: 0;
+  background: #1a1f2e;
+  z-index: 10;
+  padding: 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #9ca3af;
+  text-align: left;
+  white-space: nowrap;
+  border-bottom: 1px solid #374151;
+}
+
+.scanner-table td {
+  padding: 0.75rem;
+  font-size: 0.875rem;
+  border-bottom: 1px solid #374151;
+  white-space: nowrap;
+}
+
+.scanner-table tbody tr {
+  transition: background-color 200ms ease;
+}
+
+.scanner-table tbody tr:hover {
+  background: rgba(55, 65, 81, 0.5);
+}
+
+.scanner-table-container {
+  overflow-x: auto;
+  margin: 0 -1rem;
+  padding: 0 1rem;
+}
+
+.scanner-table-container::-webkit-scrollbar {
+  height: 8px;
+}
+
+.scanner-table-container::-webkit-scrollbar-track {
+  background: rgba(31, 41, 55, 0.5);
+  border-radius: 4px;
+}
+
+.scanner-table-container::-webkit-scrollbar-thumb {
+  background: rgba(59, 130, 246, 0.5);
+  border-radius: 4px;
+  transition: background-color 200ms ease;
+}
+
+.scanner-table-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(59, 130, 246, 0.7);
+}
+
+/* Market Cap Colors */
+.market-cap-value {
+  color: #60a5fa;
+}
+
+/* Strategy Badge */
+.strategy-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.375rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.strategy-badge.new-high {
+  background: rgba(34, 197, 94, 0.2);
+  color: #4ade80;
+}
+
+.strategy-badge.surge {
+  background: rgba(59, 130, 246, 0.2);
+  color: #60a5fa;
+}
+
+/* Layout Controls */
+.layout-controls {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  display: flex;
+  gap: 0.75rem;
+  z-index: 50;
+  padding: 0.75rem;
+  background: rgba(17, 24, 39, 0.8);
+  backdrop-filter: blur(8px);
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Breakpoint Indicator */
+.breakpoint-indicator {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  padding: 0.5rem 0.75rem;
+  background: rgba(17, 24, 39, 0.9);
+  backdrop-filter: blur(8px);
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  color: #9ca3af;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Dark Mode Enhancements */
+@media (prefers-color-scheme: dark) {
+  .react-grid-item {
+    background: #1a1f2e;
+  }
+
+  .widget-header {
+    background: #1f2937;
+  }
+
+  .layout-controls,
+  .breakpoint-indicator {
+    background: rgba(17, 24, 39, 0.95);
+  }
+}
