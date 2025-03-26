@@ -2,7 +2,8 @@ import { createClient } from '@supabase/supabase-js';
 import { CryptoData, WebSocketMessage, CryptoStreamData, WebSocketAnalytics } from '../types/crypto';
 import axios from 'axios';
 
-const CRYPTOCOMPARE_API_KEY = '322919b00018508b939c84d3f96fc10c7eaee7c28968f4df5703e660ba5e8452';
+// const CRYPTOCOMPARE_API_KEY = '322919b00018508b939c84d3f96fc10c7eaee7c28968f4df5703e660ba5e8452';
+const CRYPTOCOMPARE_API_KEY = '2977588d3e7fceb77049aee9daecee03c5e660a9964dd718db768af539e4b6df';
 const CRYPTOCOMPARE_WS_URL = 'wss://streamer.cryptocompare.com/v2?api_key=';
 const CRYPTOCOMPARE_REST_URL = 'https://min-api.cryptocompare.com/data/top/totalvolfull';
 
@@ -73,7 +74,6 @@ class CryptoWebSocket {
 
   constructor() {
     this.initializeTopCoins();
-    this.setupConnectionCheck();
     window.addEventListener('online', this.handleOnline.bind(this));
     window.addEventListener('offline', this.handleOffline.bind(this));
     this.testSupabaseConnection();
@@ -195,6 +195,11 @@ class CryptoWebSocket {
   }
 
   private handleOnline() {
+    if (this.ws?.readyState === WebSocket.OPEN) {
+      console.log('WebSocket already connected');
+      return;
+    }
+
     console.log('Network connection restored, reconnecting...');
     this.reconnect();
   }
@@ -231,8 +236,7 @@ class CryptoWebSocket {
           },
           timeout: 10000
         });
-
-        if (response.data.Data) {
+        if (response.data.Data && Object.keys(response.data.Data).length) {
           const batchCoins = response.data.Data
             .filter((coin: any) => coin.RAW?.USD && coin.DISPLAY?.USD)
             .map((coin: any) => coin.CoinInfo.Name);
@@ -281,7 +285,7 @@ class CryptoWebSocket {
 
     } catch (error) {
       console.error('Failed to fetch top coins:', error);
-      setTimeout(() => this.initializeTopCoins(), 5000);
+      // setTimeout(() => this.initializeTopCoins(), 5000);
     } finally {
       this.isInitializing = false;
     }
@@ -291,7 +295,7 @@ class CryptoWebSocket {
     if (this.connectionPromise) {
       return this.connectionPromise;
     }
-
+    
     this.connectionPromise = new Promise(async (resolve, reject) => {
       try {
         await this.connect();
@@ -344,7 +348,6 @@ class CryptoWebSocket {
             clearTimeout(this.connectionTimeout);
             this.connectionTimeout = null;
           }
-          this.reconnectAttempts = 0;
           this.reconnectDelay = INITIAL_RECONNECT_DELAY;
           this.connectionStatus = 'connected';
           this.setupHeartbeat();
@@ -399,10 +402,6 @@ class CryptoWebSocket {
         this.ws.onclose = (event) => {
           console.log(`WebSocket connection closed: ${event.code} - ${event.reason}`);
           this.cleanup();
-          
-          if (!this.isReconnecting) {
-            this.reconnect();
-          }
           
           reject(new Error('Connection closed'));
         };
@@ -492,14 +491,14 @@ class CryptoWebSocket {
       
       await new Promise(resolve => setTimeout(resolve, this.reconnectDelay));
       this.reconnectAttempts++;
-      
+
       try {
         await this.connect();
         this.isReconnecting = false;
         this.setupConnectionCheck();
       } catch (error) {
         console.error('Reconnection attempt failed:', error);
-        setTimeout(() => this.reconnect(), 1000);
+        setTimeout(() => this.reconnect(), 10000);
       }
     } else {
       console.error('Max reconnection attempts reached, reinitializing...');
